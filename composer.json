@@ -1,0 +1,13 @@
+{
+    "name": "user-service",
+    "description": "PHP user management microservice",
+    "authors": [
+        {
+            "name": "Andrew Sannes",
+            "email": "andrew.sannes@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "^3.0"
+    }
+}
