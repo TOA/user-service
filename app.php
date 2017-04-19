@@ -14,8 +14,19 @@ $app->put('/user', function (Request $request, Response $response) {
     $email = $request->getAttribute('email');
     $password = $request->getAttribute('password');
 
-    $db = new PDO('mysql:dbname=bagtag;host=127.0.0.1');
-    $result = $db->exec("SELECT id FROM `user` WHERE email=$email AND password=$password");
+    $db = [
+        'host'      => getenv('DB_HOST'),
+        'user'      => getenv('DB_USERNAME'),
+        'pass'      => getenv('DB_PASSWORD'),
+        'dbname'    => getenv('DB_DATABASE'),
+    ];
+
+    $pdo = new PDO(
+        "mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
+        $db['user'], $db['pass']
+    );
+
+    $result = $pdo->exec("SELECT id FROM `user` WHERE email=$email AND password=$password");
 
     if (!$result) {
         return $response->withStatus(404);
@@ -32,8 +43,19 @@ $app->post('/user', function (Request $request, Response $response) {
     $email = $request->getAttribute('email');
     $password = $request->getAttribute('password');
 
-    $db = new PDO('mysql:dbname=bagtag;host=127.0.0.1');
-    $result = $db->exec("INSERT INTO `user` (`name`, email, password) VALUES ($name, $email, $password");
+    $db = [
+        'host'      => getenv('DB_HOST'),
+        'user'      => getenv('DB_USERNAME'),
+        'pass'      => getenv('DB_PASSWORD'),
+        'dbname'    => getenv('DB_DATABASE'),
+    ];
+
+    $pdo = new PDO(
+        "mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
+        $db['user'], $db['pass']
+    );
+
+    $result = $pdo->exec("INSERT INTO `user` (`name`, email, password) VALUES ($name, $email, $password");
 
     if (!$result) {
         return $response->withStatus(500);
@@ -48,8 +70,19 @@ $app->post('/user', function (Request $request, Response $response) {
 $app->get('/user/{id}', function (Request $request, Response $response) {
     $id = $request->getAttribute('id');
 
-    $db = new PDO('mysql:dbname=bagtag;host=127.0.0.1');
-    $result = $db->exec("SELECT email, `name` FROM `user` WHERE id=$id");
+    $db = [
+        'host'      => getenv('DB_HOST'),
+        'user'      => getenv('DB_USERNAME'),
+        'pass'      => getenv('DB_PASSWORD'),
+        'dbname'    => getenv('DB_DATABASE'),
+    ];
+
+    $pdo = new PDO(
+        "mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
+        $db['user'], $db['pass']
+    );
+
+    $result = $pdo->exec("SELECT email, `name` FROM `user` WHERE id=$id");
 
     if (!$result) {
         return $response->withStatus(404);
