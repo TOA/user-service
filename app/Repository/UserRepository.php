@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 
+use App\Entity\User;
 use PDO;
 
 class UserRepository
@@ -26,11 +27,28 @@ class UserRepository
             "mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
             $db['user'], $db['pass']
         );
+
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     }
 
-    public function find(...$conditions)
+    /**
+     * @param int $id
+     * @return User|bool
+     */
+    public function findById(int $id)
     {
+        $sql = "SELECT * FROM `users` WHERE id = :id";
 
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            return false;
+        }
+
+        return new User($result);
     }
 
     public function insert(array $data)
