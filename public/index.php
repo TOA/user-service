@@ -70,6 +70,8 @@ $app->post('/user', function (Request $request, Response $response) {
 $app->get('/user/{id}', function (Request $request, Response $response) {
     $id = $request->getAttribute('id');
 
+    return $response->withJson('Getting user with id '. $id);
+
     $db = [
         'host'      => getenv('DB_HOST'),
         'user'      => getenv('DB_USERNAME'),

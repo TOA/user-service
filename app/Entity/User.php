@@ -26,17 +26,14 @@ class User
 
     /**
      * User constructor.
-     * @param int   $id
-     * @param mixed $name
-     * @param mixed $email
-     * @param mixed $password
+     * @param array $data
      */
-    public function __construct($id, $name, $email, $password)
+    public function __construct(array $data)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->email = $email;
-        $this->password = $password;
+        $this->id = $data['id'];
+        $this->name = $data['name'];
+        $this->email = $data['email'];
+        $this->password = $data['password'];
     }
 
     /**
@@ -101,5 +98,18 @@ class User
     public function setPassword($password)
     {
         $this->password = $password;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'email' => $this->getEmail(),
+            'password' => $this->getPassword()
+        ];
     }
 }
