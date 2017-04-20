@@ -1,11 +1,17 @@
 <?php
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 
+use App\Repository\UserRepository;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-$app = new Slim\App();
+$config = [];
+$config['displayErrorDetails'] = getenv('APP_ENV');
+
+$app = new Slim\App([
+    'settings' => $config
+]);
 
 /**
  * Authenticate
@@ -70,27 +76,14 @@ $app->post('/user', function (Request $request, Response $response) {
 $app->get('/user/{id}', function (Request $request, Response $response) {
     $id = $request->getAttribute('id');
 
-    return $response->withJson('Getting user with id '. $id);
+    $repository = new UserRepository();
+    $user = $repository->findById($id);
 
-    $db = [
-        'host'      => getenv('DB_HOST'),
-        'user'      => getenv('DB_USERNAME'),
-        'pass'      => getenv('DB_PASSWORD'),
-        'dbname'    => getenv('DB_DATABASE'),
-    ];
-
-    $pdo = new PDO(
-        "mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
-        $db['user'], $db['pass']
-    );
-
-    $result = $pdo->exec("SELECT email, `name` FROM `user` WHERE id=$id");
-
-    if (!$result) {
+    if (!$user) {
         return $response->withStatus(404);
     }
 
-    return $response->withJson($result);
+    return $response->withJson($user->toArray());
 });
 
 $app->run();
