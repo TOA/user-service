@@ -58,7 +58,7 @@ class UserRepository
      */
     public function findByCredentials($email, $password)
     {
-        $sql = "SELECT * FROM `users` WHERE email = :email AND password = :password";
+        $sql = "SELECT * FROM `users` WHERE `email` = :email AND `password` = :password";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([

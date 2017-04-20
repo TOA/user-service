@@ -17,8 +17,8 @@ $app = new Slim\App([
  * Authenticate
  */
 $app->put('/user', function (Request $request, Response $response) {
-    $email = $request->getAttribute('email');
-    $password = $request->getAttribute('password');
+    $email = $request->getParsedBodyParam('email');
+    $password = $request->getParsedBodyParam('password');
 
     $repository = new UserRepository();
     $user = $repository->findByCredentials($email, $password);
