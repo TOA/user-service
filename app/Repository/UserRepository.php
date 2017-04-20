@@ -51,6 +51,29 @@ class UserRepository
         return new User($result);
     }
 
+    /**
+     * @param $email
+     * @param $password
+     * @return User|bool
+     */
+    public function findByCredentials($email, $password)
+    {
+        $sql = "SELECT * FROM `users` WHERE email = :email AND password = :password";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'email' => $email,
+            'password' => $password
+        ]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            return false;
+        }
+
+        return new User($result);
+    }
+
     public function insert(array $data)
     {
 

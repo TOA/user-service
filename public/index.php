@@ -20,25 +20,14 @@ $app->put('/user', function (Request $request, Response $response) {
     $email = $request->getAttribute('email');
     $password = $request->getAttribute('password');
 
-    $db = [
-        'host'      => getenv('DB_HOST'),
-        'user'      => getenv('DB_USERNAME'),
-        'pass'      => getenv('DB_PASSWORD'),
-        'dbname'    => getenv('DB_DATABASE'),
-    ];
+    $repository = new UserRepository();
+    $user = $repository->findByCredentials($email, $password);
 
-    $pdo = new PDO(
-        "mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
-        $db['user'], $db['pass']
-    );
-
-    $result = $pdo->exec("SELECT id FROM `user` WHERE email=$email AND password=$password");
-
-    if (!$result) {
+    if (!$user) {
         return $response->withStatus(404);
     }
 
-    return $response->withJson($result);
+    return $response->withJson($user->getId());
 });
 
 /**
