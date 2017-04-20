@@ -74,8 +74,22 @@ class UserRepository
         return new User($result);
     }
 
+    /**
+     * @param array $data
+     * @return User|bool
+     */
     public function insert(array $data)
     {
+        $sql = "INSERT INTO `users` (name, email, password) VALUES (:name, :email, :password)";
 
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password']
+        ]);
+
+        $id = $this->pdo->lastInsertId();
+        return $this->findById($id);
     }
 }

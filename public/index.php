@@ -34,29 +34,22 @@ $app->put('/user', function (Request $request, Response $response) {
  * Register
  */
 $app->post('/user', function (Request $request, Response $response) {
-    $name = $request->getAttribute('name');
-    $email = $request->getAttribute('email');
-    $password = $request->getAttribute('password');
+    $name = $request->getParsedBodyParam('name');
+    $email = $request->getParsedBodyParam('email');
+    $password = $request->getParsedBodyParam('password');
 
-    $db = [
-        'host'      => getenv('DB_HOST'),
-        'user'      => getenv('DB_USERNAME'),
-        'pass'      => getenv('DB_PASSWORD'),
-        'dbname'    => getenv('DB_DATABASE'),
-    ];
+    $repository = new UserRepository();
+    $user = $repository->insert([
+        'name' => $name,
+        'email' => $email,
+        'password' => $password,
+    ]);
 
-    $pdo = new PDO(
-        "mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'],
-        $db['user'], $db['pass']
-    );
-
-    $result = $pdo->exec("INSERT INTO `user` (`name`, email, password) VALUES ($name, $email, $password");
-
-    if (!$result) {
+    if (!$user) {
         return $response->withStatus(500);
     }
 
-    return $response->withJson($result);
+    return $response->withJson($user->getId());
 });
 
 /**
