@@ -13,22 +13,10 @@ $app = new Slim\App([
     'settings' => $config
 ]);
 
-$app->options('/{routes:.+}', function ($request, $response, $args) {
-    return $response;
-});
-
-$app->add(function ($req, $res, $next) {
-    $response = $next($req, $res);
-    return $response
-        ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-});
-
 /**
  * Authenticate
  */
-$app->put('/user', function (Request $request, Response $response) {
+$app->post('/user', function (Request $request, Response $response) {
     $email = $request->getParsedBodyParam('email');
     $password = $request->getParsedBodyParam('password');
 
@@ -45,7 +33,7 @@ $app->put('/user', function (Request $request, Response $response) {
 /**
  * Register
  */
-$app->post('/user', function (Request $request, Response $response) {
+$app->put('/user', function (Request $request, Response $response) {
     $name = $request->getParsedBodyParam('name');
     $email = $request->getParsedBodyParam('email');
     $password = $request->getParsedBodyParam('password');
