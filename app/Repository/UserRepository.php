@@ -58,7 +58,7 @@ class UserRepository
      */
     public function findByEmail($email)
     {
-        $sql = "SELECT * FROM `users` WHERE `email` = ':email'";
+        $sql = "SELECT * FROM `users` WHERE `email` = :email";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
@@ -80,7 +80,7 @@ class UserRepository
      */
     public function findByCredentials($email, $password)
     {
-        $sql = "SELECT * FROM `users` WHERE `email` = ':email' AND `password` = ':password'";
+        $sql = "SELECT * FROM `users` WHERE `email` = :email AND `password` = :password";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
@@ -102,7 +102,7 @@ class UserRepository
      */
     public function insert(array $data)
     {
-        $sql = "INSERT INTO `users` (name, email, password) VALUES (':name', ':email', ':password')";
+        $sql = "INSERT INTO `users` (name, email, password) VALUES (:name, :email, :password)";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
