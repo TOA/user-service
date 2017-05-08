@@ -33,10 +33,14 @@ $app->post('/user', function (Request $request, Response $response) {
     $password = $request->getParsedBodyParam('password');
 
     $repository = new UserRepository();
-    $user = $repository->findByCredentials($email, $password);
+    $user = $repository->findByEmail($email);
 
     if (!$user) {
-        return $response->withStatus(404);
+        return $response->withStatus(500);
+    }
+
+    if (password_verify($password, $user->getPassword()) === false) {
+        return $response->withStatus(401);
     }
 
     return $response->withJson($user->getId());
@@ -54,7 +58,7 @@ $app->put('/user', function (Request $request, Response $response) {
     $user = $repository->insert([
         'name' => $name,
         'email' => $email,
-        'password' => $password,
+        'password' => password_hash($password, PASSWORD_BCRYPT),
     ]);
 
     if (!$user) {
@@ -74,7 +78,7 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
     $user = $repository->findById($id);
 
     if (!$user) {
-        return $response->withStatus(404);
+        return $response->withStatus(500);
     }
 
     return $response->withJson($user->toArray());

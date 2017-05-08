@@ -56,9 +56,31 @@ class UserRepository
      * @param $password
      * @return User|bool
      */
+    public function findByEmail($email)
+    {
+        $sql = "SELECT * FROM `users` WHERE `email` = ':email'";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'email' => $email
+        ]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            return false;
+        }
+
+        return new User($result);
+    }
+
+    /**
+     * @param $email
+     * @param $password
+     * @return User|bool
+     */
     public function findByCredentials($email, $password)
     {
-        $sql = "SELECT * FROM `users` WHERE `email` = :email AND `password` = :password";
+        $sql = "SELECT * FROM `users` WHERE `email` = ':email' AND `password` = ':password'";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
@@ -80,7 +102,7 @@ class UserRepository
      */
     public function insert(array $data)
     {
-        $sql = "INSERT INTO `users` (name, email, password) VALUES (:name, :email, :password)";
+        $sql = "INSERT INTO `users` (name, email, password) VALUES (':name', ':email', ':password')";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
