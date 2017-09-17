@@ -84,4 +84,24 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
     return $response->withJson($user->toArray());
 });
 
+/**
+ * Live Search
+ */
+$app->get('/search/live', function (Request $request, Response $response) {
+	$query = $request->getQueryParam('q');
+
+	if (!$query) {
+		return $response->withStatus(400);
+	}
+
+	$repository = new UserRepository();
+	$results = $repository->liveSearch($query);
+
+	if ($results === false) {
+		return $response->withStatus(500);
+	}
+
+	return $response->withJson($results->toArray());
+});
+
 $app->run();
