@@ -7,22 +7,22 @@ class User
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var mixed
      */
-    private $name;
+    protected $name;
 
     /**
      * @var mixed
      */
-    private $email;
+    protected $email;
 
     /**
      * @var mixed
      */
-    private $password;
+    protected $password;
 
     /**
      * User constructor.

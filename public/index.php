@@ -95,13 +95,15 @@ $app->get('/search/live', function (Request $request, Response $response) {
 	}
 
 	$repository = new UserRepository();
-	$results = $repository->liveSearch($query);
+	$users = $repository->liveSearch($query);
 
-	if ($results === false) {
+	if ($users === false) {
 		return $response->withStatus(500);
 	}
 
-	return $response->withJson($results->toArray());
+	return $response->withJson(array_map(function($user) {
+		return $user->toArray();
+	}, $users));
 });
 
 $app->run();

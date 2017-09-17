@@ -79,7 +79,7 @@ class UserRepository
     public function liveSearch($query)
     {
     	try {
-		    $sql = "SELECT * FROM `users` WHERE `name` LIKE :query OR WHERE `email` LIKE :query ORDER BY `name` ASC";
+		    $sql = "SELECT * FROM `users` WHERE `name` LIKE :query OR `email` LIKE :query ORDER BY `name` ASC";
 
 		    $stmt = $this->pdo->prepare( $sql );
 		    $stmt->execute( [
