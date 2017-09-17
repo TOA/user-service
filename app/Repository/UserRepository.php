@@ -53,7 +53,6 @@ class UserRepository
 
     /**
      * @param $email
-     * @param $password
      * @return User|bool
      */
     public function findByEmail($email)
@@ -71,6 +70,37 @@ class UserRepository
         }
 
         return new User($result);
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function liveSearch($query)
+    {
+    	try {
+		    $sql = "SELECT * FROM `users` WHERE `name` LIKE :name ORDER BY `name` ASC";
+
+		    $stmt = $this->pdo->prepare( $sql );
+		    $stmt->execute( [
+			    'name' => '%' . $query . '%'
+		    ] );
+		    $results = $stmt->fetchAll( PDO::FETCH_ASSOC );
+
+		    if ( $stmt->rowCount() === 0 ) {
+			    return [];
+		    }
+
+		    $users = [];
+
+		    foreach($results as $result) {
+		    	$users[] = new User($result);
+		    }
+
+		    return $users;
+	    } catch(\Exception $e) {
+    		return false;
+	    }
     }
 
     /**
